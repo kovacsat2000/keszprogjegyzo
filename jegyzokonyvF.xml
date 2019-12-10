@@ -1,0 +1,1470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.1/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.1/sch/docbook.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
+    version="5.1">
+    <info>
+        <title>Magas szintű programozási nyelvek 2. Jegyzőkönyv. Kovács Attila Patrik. </title>
+    </info>
+    <sect1>
+        <title>1. hét</title>
+        <sect2>
+            <title>Gagyi</title>
+            <para>Ha -128 és 127 közötti értékeket írunk, akkor a while feltétel hamis lesz, és nem
+                megy bele a ciklusba. A csavar ott van, hogy -128 és 127 (kommentben ott a range
+                -128tól 127ig) értékek között egy előre elkészített poolból kapjuk meg az értéknek
+                megfelelő objektumot, ezért kétszer a 127 nyílván ugyanaz lesz. Viszont ha nem a
+                range közötti értéket adunk, akkor az Integer.java-ban a return new Integer(i) fut
+                le, azaz két eltérő című ÚJ objektumunk lesz, és máris igaz lesz az x!=t is. Érdekes
+                még a történetben, hogy hasonlító jeleknél úgy érték szerint hasonlít össze, == vagy
+                != esetén pedig a memóriacímeket nézi. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/1HET/gagyi/fo.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <informalfigure>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/1HET/gagyi/scrfo.png"/>
+                    </imageobject>
+                </mediaobject>
+            </informalfigure>
+            <informalfigure>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/1HET/gagyi/fo2.png"/>
+                    </imageobject>
+                </mediaobject>
+            </informalfigure>
+            <para>Ha az érték, amit megadunk -128 és 127 közötti, akkor a valueOf nem fog létrehozni
+                egy új objektumot, hanem a cachen belül poololja az Integer objektumot(ugyanazt
+                használja fel). Ha viszont az érték kívül esik a tartományon, akkor a new Integer
+                fut le, ami egy új objektumot hoz létre. </para>
+        </sect2>
+        <sect2>
+            <title>Yoda</title>
+            <para>A yoda conditions az összehasonlításnál lép a színre. Van két változónk,
+                    <emphasis>a</emphasis> és <emphasis>b</emphasis>. Az <emphasis>a</emphasis>
+                legyen "valami" a <emphasis>b</emphasis> pedig legyen null. Összehasonlításnál ha a
+                    <emphasis>b</emphasis>-t tesszük előre, akkor "null pointer exception"-t kapunk,
+                mivel nullal nyílván nem hasonlítunk össze. Viszont ha <emphasis>a</emphasis>-t
+                tesszük előre, akkor végrehajtja az összehasonlítást.</para>
+            <informalfigure>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/1HET/yoda/fo2.png"/>
+                    </imageobject>
+                </mediaobject>
+            </informalfigure>
+            <informalfigure>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/1HET/yoda/fo1.png"/>
+                    </imageobject>
+                </mediaobject>
+            </informalfigure>
+        </sect2>
+        <sect2>
+            <title>OO szemlélet</title>
+            <para>A mainben kiiratom a next()-et 1-től 5-ig. Ha éppen nincs tárolt érték, akkor
+                befut a generálásba, és csinál két randomot (stored és k), és ebben az esetben a k-t
+                visszaadja. Ha pedig van tárolt érték, akkor csak simán visszaadja(stored). </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/1HET/polar/fo.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/1HET/polar/fo2.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Egy ehhez nagyon hasonlő fgv. dolgozik a Random.java fájlban is(nextGaussian()). </para>
+            <para><imagedata fileref="hetek/1HET/polar/fo3.png"/></para>
+            <para>Apróbb külünbség a mi kódunk és a JDK között, hogy a JDK SctrictMath osztályt
+                használ a mi Math osztályunk helyett, ami annyiban más, hogy pontosabb, mint a Math,
+                viszont lassabb is valamennyivel. </para>
+            <para>A másik külőnbség az 583. sorban fedezhető fel: synchronized. Ez szinkronizálttá
+                teszi a metódust, ami azt vonja maga után, hogy ha pl. több szál akarja meghívni az
+                objektumra ugyanazt az efféle metódust, akkor egyszerre csak egy lesz végrehajtva, a
+                többi pedig megvárja a végét. És mivel az ilyen metódus hamarabb lefut, mint
+                akármilyen más metódus, amelyet ugyanarra az objektumra hívtak meg, ezért az
+                objektumon belüli változásokat minden másik szál is látni fogja. </para>
+        </sect2>
+        <sect2>
+            <title>Kódolás from scratch</title>
+            <para>A program megírásához segitségül vettem a megadott linket. </para>
+            <para>A Bailey-Borwein-Plouffe (BBP) algoritmus gondolatmenetét használtam, melynek
+                segítségével hexadecimális kifejtésben tudunk kiírni jegyeket a Pi számban, az előző
+                tagok ismerete nélkül. Adott esetben az 1000001. elemtől számol.</para>
+            <para><imagedata fileref="hetek/1HET/bbp/fo1.png"/></para>
+            <informalfigure>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/1HET/bbp/fo2.png"/>
+                    </imageobject>
+                </mediaobject>
+                <informalfigure>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="hetek/1HET/bbp/fo3.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </informalfigure>
+            </informalfigure>
+        </sect2>
+    </sect1>
+    <sect1>
+        <title>2. hét</title>
+        <sect2>
+            <title>Liskov helyettesítés sértése</title>
+            <para>Kicsit átdolgoztam a pingvin-madaras példát. Én a progimban cicákkal és
+                plüsscicákkal játszadozok. </para>
+            <para>A Liskov elv azt akarja mondani, hogy ha A leszármazottja B-nek, akkor mindenhol
+                gond nélkül használható kell legyen A is, ahol B használható. </para>
+            <para>Az én példámban a cicák isznak tejet, és "meg akarom itatni" a plüsscicákat is. Ha
+                logikusan gondolkodunk, akkor a plüsscica semmilyen esetben nem fog tejet inni. </para>
+            <para>Lett egy Java és egy C++ kód is. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/2HET/Liskov/foCpp.png"/>
+                    </imageobject>
+                </inlinemediaobject><imageobject>
+                    <imagedata fileref="hetek/2HET/Liskov/foTCpp.png"/>
+                </imageobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/2HET/Liskov/foJava.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/2HET/Liskov/foTJava.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>Ciklomatikus komplexitás</title>
+            <para>A ciklomatikus komplexitás egy szoftvermetrika. A metrika egy adott kód alapján
+                határozza meg annak a komplexitását, egy számértékben kifejezve. </para>
+            <para>A feladat az volt, hogy számoljuk ki valamelyik programunk ciklomatikus
+                komplexitását. </para>
+            <para>Én egy régebbi RSA töréses progit választottam, és a lizard.ws oldalt használtam a
+                méréshez. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/2HET/Ciklomatikus%20komplexit%C3%A1s/fo1.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Ebben a kis ablakban kell először kiválasztani a kód nyelvét, utána becopyzni a
+                kódot a mezőbe. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/2HET/Ciklomatikus%20komplexit%C3%A1s/fo2.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Egy ilyen ablakban kapjuk vissza az oldal által számolt adatokat. Szépen lebontva
+                fgv.-kre. Az NLOC érték a sorok számát mutatja a fgv.-ben(csak olyan sorokat, amiben
+                írva is van), a complexity a ciklomatikus komplexitást, a token pedig a karaktereket
+                számolja. </para>
+        </sect2>
+        <sect2>
+            <title>Szülő-gyerek</title>
+            <para>Ennél a feladatnál az volt a dolgunk, hogy megmutassuk, hogy az ősön keresztül
+                csak az ős üzenetei küldhetők. Írtam a Plusscica-ban egy fgv.-t(akarmi()), és amikor
+                a Cica-ra akarom hívni, akkor hibát dob mind Java mind C++ esetén. Fordított
+                esetben, mint a példában is van, gond nélkül működne a dolog, tehát ha Cica-ban van
+                egy fgv.-nk és Plusscica-ra akarom hívni, akkor ebben az esetben fogja tudni, hogy
+                mit akarok tőle. </para>
+            <para>Itt a C++ kód. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/2HET/Sz%C3%BCl%C5%91gyerek/foCpp.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><imagedata fileref="hetek/2HET/Sz%C3%BCl%C5%91gyerek/foTCpp.png"/></para>
+            <para>Itt pedig a Java. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/2HET/Sz%C3%BCl%C5%91gyerek/foJava.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/2HET/Sz%C3%BCl%C5%91gyerek/foTJava.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>Anti OO</title>
+            <para>A feladat az volt, hogy hasonlítsuk össze a futási időket a BBP algoritmusos progi
+                esetén. </para>
+            <para>0. pozíciótól számított 10<superscript>6</superscript>,
+                    10<superscript>7</superscript>, 10<superscript>8</superscript> darab jegyét
+                határozzuk meg C, C++, Java és C# nyeleken. </para>
+            <para>Az eredményeket egy táblázatba foglaltam. Később megkértem a tutoromat, hogy
+                futtassa ő is, hogy összehasonlíthassam a futási időket. </para>
+            <para>Én gépem: 1,8 GHz-es, kétmagos Intel Core i5 processzor (Turbo Boost gyorsítással
+                2,9 GHz) 3 MB-os megosztott L3 gyorsítótárral, 128 GB-os SSD-tároló és 8GB RAM. </para>
+            <para>Tutorom gépe: 2,5 GHz-es, négymagos Intel Core i5 processzor (Turbo Boost
+                gyorsítással 3,5 GHz) 6 MB-os megosztott L3 gyorsítótárral, 500 GB-os SSD-tároló és
+                8GB RAM.</para>
+            <para>Én eredményeim: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/2HET/Anti%20OO/foENYEM.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Tutorom eredményei: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/2HET/Anti%20OO/fZsolti.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Leggyorsabbnak a Java bizonyult a tesztek során, elég nagy ugrásnyi
+                    különbséggel(10<superscript>8</superscript> esetén 12mp) követi a C#, aztán C és
+                végül a C++. </para>
+        </sect2>
+    </sect1>
+    <sect1>
+        <title>3. hét</title>
+        <sect2>
+            <title> Reverse engineering</title>
+            <para>A feladat az volt, hogy rajzoljunk UML osztálydiagramot a tavalyi binfás progihoz. </para>
+            <para>A feladat során a kódból generáljuk a diagramot. Én Umbrello-t használtam hozzá. </para>
+            <para>A lényeg itt az, hogy előre dolgozunk, és a már kész kódból készítjük a diagramot. </para>
+            <para>Ez abban az esetben hasznos mondjuk, ha mások számára akarjuk egyszerűbbé tenni a
+                kódunk megértését. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/3HET/Reverse%20engineering%20UML%20oszt%C3%A1lydiagram/REfo.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Látszik, hogy nincs csomópont gyökér elem a binfa nélkül, ezt a kompozíciós
+                kapcsolat is mutatja. A két osztály közötti aggregációs kapcsolat pedig az első
+                gyerek elemeket jelöli a képen.</para>
+            <para>Ahol az asszociációs kapcsolat vissza fordul saját osztályába, ott mutatja, hogy
+                van két aggregáció fajtájú asszociációnk is a programban. </para>
+            <para>A 0..1 fa kapcsolat azt jelöli, hogy pontosan két változat lehet a bevitt
+                paraméterektől függően, mikor nincs gyökér elemünk és mikor van.</para>
+        </sect2>
+        <sect2>
+            <title> Forward engineering</title>
+            <para>A feladat az volt, hogy az előző feladattal ellentétben, itt az UML
+                osztálydiagramból csináljunk forrást. Ennek talán egy kicsit több értelme is van. </para>
+            <para>Itt is Umbrello-t használtam. Először megrajzoltam az egyszerű kis diagramot,
+                aztán a program segítségével kódot generáltattam belőle. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/3HET/Forward%20engineering%20UML/fo1.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>A diagramunkkal meghatározunk egy szerkezetet a programunknak. Nyílván nem egy
+                kész programot rakunk ezzel össze, de elég hasznos tud lenni olyan esetekben, ha
+                megvan az UML osztálydiagramunk. </para>
+            <para>A függvények törzse üres marad, nem is tudná szegény Umbrello mivel feltölteni, de
+                kezdetnek elég jó kis induló forrást ad. </para>
+        </sect2>
+        <sect2>
+            <title>Egy esettan</title>
+            <para>Az elméletes résznél sokmindenről olvasunk, a könyv írója próbálja részletesen
+                elmagyarázni a modellezéses, UML-es dolgokat. Szó esik külöbőző típusú
+                asszociációkról (1-1, több-1, 1-több), kompozícióról, aggregációról és a
+                programnyelvben használt adattípusokról. </para>
+            <para>Később szó van olyanokról, mint a kódgenerálás, azaz Forward Engineering vagy
+                kódvisszafejtés, azaz Reverse Engineering(ezekről bővebben fentebbi feladatoknál). </para>
+            <para>A feladat az volt, hogy létre kell hozni egy olyan alkalmazást, amely a
+                számítógépek és alkatrészek eladásával foglalkozó cégen belül úgymond nyílvántartja
+                az éppen meglévő alkatrészeket és konfigurációkat. A megrendelő sok különböző
+                követelmény szabott meg a program működésével és használhatóságával kapcsolatban. </para>
+            <para>A fő része egy keretrendszer osztálykönyvtár formában. A termékek lehetnek
+                merevlemezek, kijelzők és konfigurációk(a konfigurációk plusz összetett elemek). </para>
+            <para>Ennek a keretrendszernek az osztályait a ProductInventoryLib osztálykönyvtárba
+                fogjuk össze. </para>
+            <para>Van egy átfogó jellegű Product osztályunk, amelyben az összes termékre jellemző
+                tulajdonságok gyűjtjük össze. Ebben az osztályban 3 váltzó található: a név, az ár
+                és a beszerzésének dátuma(ezek protectedek), ezeket getterrel érjük el. Metódusok
+                vannak olyanok, ami pl. a termék "régiségét" mutatja meg, vagy az árát számolja ki.
+                Tartalmaz még egy print metódust is, ami kiirja a kívánt termék adatait.  </para>
+            <para>A Product osztályból pl. CompositeProduct, Display és HardDisk alosztályok is
+                leszármaztathatóak, illetve a CompositeProduct-ból leszármaztatható a
+                ComputerComfiguration alosztály is. </para>
+            <para>A dátumot adó fgv. a GetDateOfAcquisition(), a nevet a GetName() adja vissza, míg
+                az árat a GetInitialPrice(). Az ár olyan fgv., amelyet minden származtatott osztály
+                felül fog írni, mivel mindenhol másképp kell működjön. </para>
+            <para>A fájlok itt megtalálhatóak: https://github.com/kovacsat2000/esettanfiles</para>
+            <para>Futás közben: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/3HET/Egy%20esettan/fo.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>BPMN</title>
+            <para>A feladat az volt, hogy rajzoljunk le egy tevékenységet BPMN-ben.</para>
+            <para>Egy egyszerű kis tevékenységet rajzoltam. </para>
+            <para>A lényege az, hogy mindegy mi van, akkor is az alvást választjuk. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/3HET/BPMN/foBPMN.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>0.) Start</para>
+            <para>1.) Ébresztő → 2. </para>
+            <para>2.)Van valami tennivaló? a)igen → 4. b)nem → 3.</para>
+            <para>3.) Aludj vissza → 1. </para>
+            <para>4.) Fontos? a)igen → 6. b)nem → 5. </para>
+            <para>5.) Na ugye → 3. </para>
+            <para>6.) Dehogy fontos → 3. </para>
+        </sect2>
+    </sect1>
+    <sect1>
+        <title>4. hét</title>
+        <sect2>
+            <title>Encoding</title>
+            <para>A feladat az volt, hogy fordítsuk le és futtassuk a Javat tanítok könyv
+                MandelbrotHalmazNagyító.java forrását úgy, hogy a fájl nevekben és a forrásokban is
+                meghagyjuk az ékezetes betűket! </para>
+            <para>A feladat során a karakterkészletekkel kellett szórakozni... Ha anélkül proóbálom
+                futtatni, hogy a -encoding kapcsolót használnám a javac-nál, akkor laza 100 errort
+                dob. </para>
+            <para>Varázsolgattam a kódolásokkal, kipróbáltam többet is. Sokadjára végül két
+                kódolással is lefordult. Egyik a Latin 2 volt, azaz ISO-8859-2, a másik pedig a
+                windows-1252. </para>
+            <para>Különösen érdekesnek találtam a feladatot, mert már 9. osztály óta azt hallgatom a
+                progos tanáraimtól, hogy mindent vagy angolul vagy csúnyán ékezetek nélkül. </para>
+            <para><imagedata fileref="hetek/4HET/Encoding/fo1j.png"/></para>
+            <para>A progi futás közben így néz ki: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/4HET/Encoding/fofut1.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/4HET/Encoding/fofut2.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>Perceptron osztály</title>
+            <para>A feladat az volt, hogy dolgozzuk be egy külön projektbe a Perceptron
+                osztályt!</para>
+            <para>A pdf-ben lévő link alapján dolgoztam. </para>
+            <para>Az mlp.hpp file-ban van maga az osztály. </para>
+            <para>Ha fordítjuk a programot, utána futtatásnál egy képet kér .png-ben. Én a mandeles
+                képet adtam neki. </para>
+            <para>És eztán visszaad egy 0 és 1 közötti számot, amivel jellemzi ezt a képet. </para>
+            <para>A második féléves prog1-en volt egy ilyen feladat, ott kellett dolgozgatni a
+                Perceptron osztállyal. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/4HET/Perceptron/fo1.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/4HET/Perceptron/fo2.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>A program a kép piros pontjaival dolgozik, ahogy a 17. sorban is látjuk, a tömbbe
+                a red kódokat tölti fel. </para>
+            <para>A sigmoid fgv. számolja a kapot számunkat. A () operátort az mlp-ben írtuk felül.
+                És a 19. sorban hívjuk. </para>
+        </sect2>
+        <sect2>
+            <title>Full screen</title>
+            <para>A feladat az volt, hogy készítsünk egy tetszőleges teljesképernyős Java programot. </para>
+            <para>Én egy ToDoList-es projekt kódjában írogattam ezt-azt át, és "fullscreen"-essé
+                tettem a progit. </para>
+            <para><imagedata fileref="hetek/4HET/Full%20Screen/scr.png"/></para>
+            <para>Fix méretű volt az ablak, azzal kellett kicsit szívózni, kisebb-nagyobb javítgatás
+                után összeraktam a dolgokat. </para>
+            <para>Ha a fix méretet rajta hagyom a bizonyos elemeken, akkor nagyításnál elcsúszik az
+                egész összkép, ezért ezeket mind át kellett kódolni, mivel a program alapvetően fix
+                méretűre volt tervezve. </para>
+            <para>A teljes képernyőt a
+                <programlisting>primaryStage.setResizable(true);
+primaryStage.setFullScreen(true);</programlisting></para>
+            <para>parancsokkal értem el. </para>
+            <para>Maga az alkalmazás egyébként egy olyan tevékenységnapló szerű dolog, amit a
+                projektben részt vevő csapattársaimmal olyan emberek számára terveztünk, akiknek a
+                napi tevékenységeik fejbentartása, követése, időzítése és rendezgetése komoly
+                problémákat okoz. </para>
+            <para>A belépésnél egy login ablak fogad minket, hogy be tudjunk lépni a saját
+                tevékenységeink közé. Itt pedig majd tudunk tevékenységeket hozzáadni a napjainkhoz
+                naptáras lebontásban, címkézni tujduk a tevékenységeket pl. fontosság vagy sűrgősség
+                szempontok alapján, állíthatunk határidőt hozzájuk, és hasonló hasznos dolgok. </para>
+        </sect2>
+        <sect2>
+            <title>l334d1c4<superscript>5</superscript></title>
+            <para>A feladat az volt, hogy írjunk olyan OO Java vagy C++ osztályt, amely leet
+                cipherként működik. </para>
+            <para>Igazán érdekes feladat volt, nekem mindig is tetszettek az ilyen és ehhez hasonló
+                feladatok. </para>
+            <para>A progim a leet kódolás szabályai szerint kódolja a bekért szöveget. </para>
+            <para>Kezdetben ez a nyelv hackerek nyelve volt a neten. Például az ilyen nyelven írt
+                oldalak nehezen megtalálhatóak, ha nem tudjuk pontosan mit is kell keresni.</para>
+            <para>A progim úgy müködik, hogy a bekért szöveget végignézi, és a rework fgv. a
+                switchel kicserélgeti a betűket a leet betűkre. Utáni simán kiírogatja már a
+                "leet"-es betűket. </para>
+            <para>A leet szótárban egy betűhöz több leet-es betű is mehetne, írtam olyan progit is,
+                ami random választ az egy karakterhez tartozó leet-es betűk közül egyet, és azzal
+                cseréli a "kódolandó" szövegben a betűt. Azért ezt tettem be, mert ez elegánsabbnak
+                tűnt. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/4HET/l334d1c4/fo1.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/4HET/l334d1c4/fo2.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/4HET/l334d1c4/fo.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+    </sect1>
+    <sect1>
+        <title>5. hét</title>
+        <sect2>
+            <title>JDK osztályok</title>
+            <para>A feladat az volt, hogy írjunk olyan Boost C++ programot, amely kilistázza a JDK
+                összes osztályát, ráengedve az src-re. </para>
+            <para>A progi nem okozott nagyobb nehézségek, mert prog1-en is volt a fénykardnál olyan
+                feladat, amiben ki kellett listázni a neveket és a jegyeket a future-ből. Már ahhoz
+                is kellett a boost, szóval már külön telepítenem sem kellett. </para>
+            <para>A számlálós részének a lényege az, hogy ha talál egy .java végű fájlt, akkor
+                növeli egyel a változó értékét, és a végén simán kiiratom. </para>
+            <para>A kód: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/5HET/JDK/fovoid.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/5HET/JDK/fomain.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Azért van két függvény is, mert külön szerettem volna venni, hogy ki szeretnénk-e
+                listázni az összes fájlt, vagy elég csak a mappában lévő fájlok száma.</para>
+            <para>Aztán létrehozok egy Feldolgoz típusú objektumot és arra engedem rá a fgv-ket egy
+                if-en belül.</para>
+            <para>Lássuk, hogy működik: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/5HET/JDK/foterminal.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Mint feljebb is írtam, és ezen a képen látszik is, van egy kérdés a lényegi futás
+                előtt, hogy szeretnénk-e a listázott változatot, vagy sem. </para>
+            <para>Ha y-t írunk, akkor jön a teljes, ha n-t, akkor csak egy számot kapunk. </para>
+        </sect2>
+        <sect2>
+            <title>Változó argumentumszámú ctor</title>
+            <para>A feladat az volt, hogy készítsünk olyan példát, amely egy képet tesz a
+                Perceptronos projekt bementére, és a Perceptron ne egy értéket, hanem egy
+                ugyanakkora méretű „képet” adjon vissza. </para>
+            <para>Tehát az mlp.hpp-ben lévő () operátor két argumentumot vár. Lentebb ott a forrás. </para>
+            <para>Két double típusú tömb a bemenete (double image[], és double image2[]). </para>
+            <para>Tehát először létrehozza a második képet, amit majd vissza fogunk adni. </para>
+            <para>És a továbbiakban belemásolom az eredeti képet, tömbként kezelve a második képbe. </para>
+            <para>Külön érdekesség, hogy az RGB-ből a green-eket nem teszem bele, így egy kis
+                színcsavar is lesz a képen, tehát nem ugyanolyan lesz a kép. Lentebb látszik. </para>
+            <para>A main-ben pedig a ()-t két argumentummal hívom. És alatta pedig a write-al
+                belerakom a png-be az új, AZ EREDETIVEL AZONOS MÉRETŰ képet. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/5HET/V%C3%A1ltoz%C3%B3%20argumentumsz%C3%A1m%C3%BA%20ctor/fofgvop.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/5HET/V%C3%A1ltoz%C3%B3%20argumentumsz%C3%A1m%C3%BA%20ctor/fomain.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Fordítás, futtatás: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/5HET/V%C3%A1ltoz%C3%B3%20argumentumsz%C3%A1m%C3%BA%20ctor/foterm.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>És a létrejött created.png: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/5HET/V%C3%A1ltoz%C3%B3%20argumentumsz%C3%A1m%C3%BA%20ctor/created.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>Másoló-mozgató szemantika</title>
+            <para>A feladat megoldása az 5.4-ben. </para>
+        </sect2>
+        <sect2>
+            <title>Összefoglaló (Másoló-mozgató szemantika)</title>
+            <para>Összefoglalásra az 5.3-as feladatot választottam, ami a másoló-mozgató szemantika. </para>
+            <para>C++ esetén, ha létrehozunk egy objektumot, akkor mindig konstruktorokat
+                használunk. Ez a konstruktor lehet általunk megírt is, vagy ha nem, akkor a fordító
+                csinál nekünk egyet. Sok esetben jó az alapértelmezett konstruktor, viszont nem
+                mindig. Pl. a binfás esetben, mivel másolni akarjuk az objektumot, ezért sok esetben
+                érdekes eredményeket kaphatunk az alap konstruktorral, amit a fordító generál
+                nekünk. Főleg mivel az objektumunk tartalmaz pointereket is(ilyen esetekben mindig
+                kell a programozó által megírt konstruktor).</para>
+            <para>A fent említett másolás esetén a pointereket másoljuk, tehát nyílván mindkét
+                objektumnál ugyanarra a memóriaterületre mutatnak a mutatóink, ezért lényegében
+                mindkét objektum esetén ugyanott változtatunk/törlünk stb. </para>
+            <para>Ezeket a hibákat elkerülendő használunk "saját készítésű" konstruktorokat. Ezt
+                nevezik mély(deep)másolásnak(az előbbit pedig sekély(shallow)másolásnak). Ekkor nem
+                a pointereket, hanem a pointerek által mutatott adatokat másoljuk. </para>
+            <para>Két fajta ilyen konstruktor van: másoló és mozgató. </para>
+            <para>A másoló konstruktor lényege abban van, hogy a régi objektum adatait lemásolja az
+                új objektum poniterei által mutatott memóriaterületekre. A két objektum tartalma
+                ugyanaz lesz, csak lényegében a memóriaterületeik lesznek másak. Bizonyos
+                szinten/módon ez megnyugvást hoz a programunk írása közben, mivel tudjuk, hogy
+                bármit teszünk-veszünk, módosítunk az egyikben, az semmilyen módon nem lesz
+                kihatással a másikra. Viszont van ennek a dolognak egy árnyoldala, mégpedig az
+                igényelt memória megduplázódása. Mivel két külön objektumunk lesz, ezért
+                értelemszerűen kétszer annyi helyet is fog elfolalni a memóriában. </para>
+            <para>A mozgató konstruktor, ami lényegében nem is szó szerinti másolás, már másképp
+                működik. Ebben az esetben az történik, hogy az eredeti objektumunk pointereit kapja
+                meg az új objektum, tehát csak az kerül átmásolásra. A régi obektum pointereit le
+                kell nullázni. Ez nem rossz dolog, mivel memóriát takaríthatunk meg értelemszerűen.
+                Viszont arról se feledkezzünk meg, hogy ennél a módszernél csak egy használható
+                objektumunk marad. </para>
+            <para>Mozgató konstruktor esetén jobboldali referenciát (rvalue reference - &amp;&amp;)
+                használunk. Arra azonban oda kell figyelnünk, hogy ilyet csak a C++11-ben, és az azt
+                követő verziókban használhatunk. Ha terminálban fordítunk, akkor ezt a
+                -std=c++11/14/17 paranccsal érhetjük el. </para>
+            <para>A feladat az 5.3 esetében az volt, hogy kódcsipeteken keresztül vessük össze a
+                C++11 másoló és a mozgató szemantikáját, a mozgató konstruktort alapozzuk a mozgató
+                értékadásra!</para>
+            <para>Ehhez én a binfás progit vettem alapul, mert ez elég jól tudja szemléltetni az
+                ezzel a témával kapcsolatos dolgokat. Az egész forrást nem másolom be, mert az
+                nagyon hosszú lenne. </para>
+            <para>A lényeg az, hogy a mozgatás sokszor optimálisabb tud lenni, mint a másolás. </para>
+            <para>Pl. a binfa esetében: </para>
+            <para> LZWBinFa ( const LZWBinFa &amp; regi ) {</para>
+            <para> std::cout &lt;&lt; "LZWBinFa copy ctor" &lt;&lt; std::endl;</para>
+            <para> gyoker = masol(regi.gyoker, regi.fa);</para>
+            <para> }</para>
+            <para> Csomopont* masol(Csomopont* cs, Csomopont* aktHely)</para>
+            <para> {</para>
+            <para> Csomopont* uj = NULL;</para>
+            <para> if(cs != NULL){</para>
+            <para> uj = new Csomopont(cs->getBetu());</para>
+            <para> uj->ujNullasGyermek(masol(cs->nullasGyermek(),aktHely));</para>
+            <para> uj->ujEgyesGyermek(masol(cs->egyesGyermek(),aktHely));</para>
+            <para> if(cs == aktHely)</para>
+            <para> fa = aktHely;</para>
+            <para> }</para>
+            <para> return uj;</para>
+            <para> }</para>
+            <para>Ez a másoló konstruktor lenne. Láthatjuk, hogy a masol fgv. rekurzívan fogja, és
+                egy az egyben lemásolja az egész fát egy új objektumba. Mint fentebb is írtam, ez
+                dupla memóriaigény. </para>
+            <para>A mozgatás már más tészta. Itt az történik, hogy a gyökért nullpointer-re
+                állítjuk, majd a move alap fgv.-vel átmozgatjuk a fát a régiből az újba, a régi
+                fában pedig nem marad semmi. Mutatom a példát: </para>
+            <para> LZWBinFa (LZWBinFa &amp;&amp; regi) {</para>
+            <para> std::cout &lt;&lt; "LZWBinFa move ctor" &lt;&lt; std::endl;</para>
+            <para> gyoker = nullptr; </para>
+            <para> *this = std::move(regi);</para>
+            <para> }</para>
+            <para>A mozgató értékadás pedig a swapot használja, amivel kicseréli a régi és új
+                gyökereket: </para>
+            <para> LZWBinFa&amp; operator=(LZWBinFa &amp;&amp; regi){</para>
+            <para> std::cout &lt;&lt; "LZWBinFa move assign" &lt;&lt; std::endl;</para>
+            <para> std::swap(gyoker, regi.gyoker);</para>
+            <para> return *this;</para>
+            <para> }</para>
+        </sect2>
+    </sect1>
+    <sect1>
+        <title>6. hét</title>
+        <sect2>
+            <title>C++11 Custom Allocator</title>
+            <para>A feladat az volt, hogy írjunk saját alloktort. </para>
+            <para>C++-ban amikor egy objektumot példányosítunk, akkor a memóriában lefoglalódik a
+                neki szükséges terület(new operatorral). </para>
+            <para>Ez a new operator meghívja a C++ alapértelmezett allokátorát, és ez elvégzi a
+                piszkos munkát. </para>
+            <para>Azonban mi is tudunk írni saját allokátort, ha szükségünk van rá, vagy esetleg
+                valamilyen okból bele akarunk nyúlni a memóriakezelésbe. </para>
+            <para>Kódom a linken: <link
+                    xlink:href="https://github.com/kovacsat2000/prog2jegyzo/blob/master/customalloc.cpp"
+                /></para>
+            <para>Nézzünk bele a kódba egy picit. </para>
+            <para>Először ott a using-os rész. Ezzel csak annyit csinálunk, hogy definiáljuk a
+                program számára, hogy mit mivel szeretnénk helyettesíteni a továbbiakban. </para>
+            <para>Aztán jön a lényeg: az allocate. Ez a függvény egy pointert ad vissza. Ez foglalja
+                le a memóriaterületet. Van benne egy kis követés is, kiírunk egy két dolgot, hány
+                objektumnak foglalunk helyet hány bájton. </para>
+            <para>Ezt követi a deallokálás: deallocate. Ez egy olyan metódus, ami törli a
+                foglalgatásainkat, felszabadítja a memóriát. Ebben is egy kis követés. </para>
+            <para>Azután a main(): létrehozunk egy int elemeket tartalmazó vektort, itt adjuk meg,
+                hogy saját allokátort használunk. </para>
+            <para>Utáná pusbekkelünk a vektorba, és szépen sorban kiírja nekünk a progi a
+                követéseket is. </para>
+            <para>Futásnál szépen látszik, hogy hiába pusbekkelünk pl. be egy hatodik elemet az
+                ötödik után, akkor nem történik semmi helyfoglalás, mert ugye akkor a már az azelőtt
+                az ötödikkel lefoglalt helyre befér a hatodik is. Viszont mikor a kilencediket
+                pusbekkeljük, akkor újra jön a követéses-foglalásos üzenet, mivel a kilencedik már
+                nem fér be az addig lefoglalt helyre. Tehát először egy elemnek foglal helyet, utána
+                kettőnek, utána már a harmadik pusbekkel négynek, az ötödikkel nyolcnak, a
+                kilencedikkkel tizenhatnak, és így tovább. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/6HET/Custom%20Allocator/foterm.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>STL map érték szerinti rendezése</title>
+            <para>A feladat az volt, hogy rendezzünk egy STL map-ot értékei szerint. Az adott héten
+                talán legkönnyebb feladat volt ez. </para>
+            <para>A map-ok kulcs-érték párokat tartalmaznak. Felhasználásuk lényege a legtöbb
+                esetben abban van, hogy a kulcsok rendezettsége miatt könnyen tudjuk elérni az
+                adatokat. </para>
+            <para>Kissé hülyeségnek tünt ez az egész feladat, mivel itt az értékek szerint kellett
+                rendezni. </para>
+            <para>Az én példámban a kulcsok számok(int), az értékek nevek(string, amik szerint majd
+                rendezünk). </para>
+            <para>Először is létrehoztam a mapot, aminek első értéke int(a kulcs), második pedig
+                srting(az érték - nevek), és ezeket feltöltöttem random dolgokkal. </para>
+            <para>Aztán létrehoztam a vekt vektort, ami ugye parok-at tartalmaz. Ebbe belecopyztam
+                elejétől végéig back_insterterrel az adataimat a mapból. Azután kiiratom a vektort,
+                ahol látszik, hogy máris rendezve van kulcsértékek szerint, hiába nem rendezetten
+                töltöttem fel. Azután lambda rendezéssel rendezem értékek szerint, és újra kiiratom. </para>
+            <para>Lentebb a screenek. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/6HET/STL%20rendez%C3%A9s/stlmap/fokod.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/6HET/STL%20rendez%C3%A9s/stlmap/foterm.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>Alternatív Tabella rendezése</title>
+            <para>A feladat az volt, hogy mutassuk be a
+                https://progpater.blog.hu/2011/03/11/alternativ_tabella programban a java.lang
+                Interface Comparable&lt;T> szerepét. </para>
+            <para>A link alatt egy kód található, ami egy alternatív tabellát hoz létre. </para>
+            <para>Tudni kell, hogy egy sima tabella és alternatív tabella között a különbség a
+                következő: </para>
+            <para>a sima tabella esetében a csapatok pontokat kapnak, mégpedig nyert meccsért 3
+                pontot, döntetlenért egy pontot, elvesztett mecsért pedig 0 pontot; </para>
+            <para>ellenben ezzel, az alternatív tabella úgy müködik, hogy a csapatok aszerint kapnak
+                pontokat, hogy ki mennyire erős csapattal játszik, és az adott meccsen milyen
+                eredménnyel fejezi be; tehát lényegében minél erősebb csapat ellen játszik a csapat,
+                annál több pontot pontot szerez. </para>
+            <para>A program úgy müködik, hogy fordítjuk-futtatjuk a Wiki2Matrix.java-t, ez ad egy
+                értékmátrixot, majd ezt bemésoljuk az AlternatvTabella.java-ba, és ez adja vissza a
+                kívánt alternatív tabellát. </para>
+            <para>Screen: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/6HET/Alternat%C3%ADv%20tabella/alternat/foterm.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>A Csapat osztály definíciója implementálja a Comparable interfészt. </para>
+            <para>A Comparable interfész arra jó, hogy össze tudjunk hasonlítani két
+                objektumot(kisebb-e, nagyobb-e, egyenlő-e a másikkal). Egyetlen metódust tartalmaz,
+                a compareTo-t. </para>
+            <para>Azért implementáltuk az interfészt, hogy használni tudjuk annak compareTo
+                metódusát, amivel két csapatot hasonlíthatunk össze. </para>
+            <para>A metódus objektumokat hasonlít össze(a mi esetünkben ezek a csapatok erősségei
+                lesznek).</para>
+            <para>Esetünkben három értékkel térhet vissza: 1-el, ha a kiválasztott objektum nagyobb
+                az objektumnál, -1-el, ha a kiválasztott objektum kisebb az objektumnál és 0-val
+                egyébként(tehát ha egyenlők). </para>
+            <para>A kiválasztott objektum nevéhez tartozó értéket hasonlítja össze a többi névhez
+                tartozó értékkel. A csapat osztályban létrehozott elemeket majd rendezett sorrendben
+                adja vissza a sort függvény.</para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/6HET/Alternat%C3%ADv%20tabella/alternat/sort.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/6HET/Alternat%C3%ADv%20tabella/alternat/binsort.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>Gengszterek</title>
+            <para>Feladatunk az volt, hogy lambdával rendezzük a gengsztereket a Robotautó
+                Világbajnokságban. </para>
+            <para>A C++11-el bejött a képbe egy sort függvény, ezzel kellesz dolgoznunk. </para>
+            <para>A kódcsipet: </para>
+            <para>std::sort ( </para>
+            <para>gangsters.begin(), gangsters.end(), </para>
+            <para>[this, cop] ( Gangster x, Gangster y ) {</para>
+            <para>return dst ( cop, x.to ) &lt; dst ( cop, y.to ); </para>
+            <para>} </para>
+            <para>);</para>
+            <para>Ha ezt a sort függvényt két paraméterrel adjuk meg, akkor saját maga dönti el,
+                hogy mi szerint rendez. </para>
+            <para>Nálunk ez a két paraméter a gangsters.begin() és a gangsters.end(), előbbi az
+                első, míg utóbbi az utolsó elem indexét adja vissza. </para>
+            <para>Esetünkben azonban, tehát a három paraméteres verzióval van egy harmadik
+                megadnivaló is. </para>
+            <para>Ez egy olyan függvény, ami a rendezés alapjáúl szolgál majd. </para>
+            <para>A példánkban látszik a szintaxis. </para>
+            <para>A lambda feltétel akkor ad majd vissza igaz értéket esetünkben, ha x gengszter
+                közelebb van a rendőrhöz(cop), mint y. Tehát a sort eszerint fog rendezni. </para>
+        </sect2>
+    </sect1>
+    <sect1>
+        <title>7. hét</title>
+        <sect2>
+            <title>FUTURE tevékenység editor</title>
+            <para>A feladat az volt, hogy javítsunk valamit a ActivityEditor.java JavaFX programon! </para>
+            <para><link xlink:href="https://github.com/nbatfai/future/tree/master/cs/F6"/></para>
+            <para>Mikor nekiugrottam ennek a feladatnak, először nem akadtam semmilyen bugra/hibára
+                benne, de kevés nyomkodás után végül találtam. </para>
+            <para>A hiba az volt, hogy amikor átneveztünk egy tevékenységet benne, akkor a City
+                mappában az adott helyen nem átnevezte az adott fájlt, hanem az átnevezni kívánt
+                fájl megmaradt úgy, ahogy volt, és mellette létrehozott egy másik ÜRES fájlt, aminek
+                a neve az volt, amire átneveztük az adott fájlt. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/7HET/Tevekenyseg%20editor/fajl.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Ezt kiküszöbölendő nyúlkáltam a kódban. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/7HET/Tevekenyseg%20editor/kod.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Amint látjuk, ha átneveztünk egy fájlt, akkor az futott le, hogy
+                newf.createNewFile(), ami létrehozott egy teljesen új és üres fájlt az adott névvel. </para>
+            <para>Ezt írtam át arra, hogy átnevezze az régi(oldf) fájlt(oldf.renameTo(newf)) az
+                általunk beírt névre. </para>
+            <para>Két érdekesség volt a dologban: </para>
+            <para>Az első az volt, hogy ha benne hagytam a try-catch-ban a dolgot, akkor nem fordult
+                le, az a hibát adván, hogy ez a hiba sosem fog előfordulni, tehát értelmetlen a
+                try-catch. Utánanéztem, és tényleg: a java fel tudja ismerni, hogy egy olyan
+                kivételt akarok "elakpni", ami soha nem fog előfordulni. Ezért volt a hiba.</para>
+            <para>A másik dolog az volt, hogy a renameTo() fgv.-nek először az oldText-et akartam
+                bedobni, mivel azt hittem, hogy stringet vár tőlem. Erre hibát adott. Ennek is
+                utánanéztem, és kiderült, hogy egy fájl változóját várja, ezért kellett az oldf
+                változót beírni a fgv. zárójelei közé. </para>
+        </sect2>
+        <sect2>
+            <title>OOCWC Boost ASIO hálózatkezelése </title>
+            <para>A feladat az volt, hogy mutassunk rá a scanf szerepére és használatára!</para>
+            <para>https://github.com/nbatfai/robocar-
+                emulator/blob/master/justine/rcemu/src/carlexer.ll </para>
+            <para>A sscanf az std:: könyvtár egy függvénye, amely formázott string inputot olvas be. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/7HET/OOCWC%20boost/kod.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>A példánkban láthatjuk, hogy a sscanf négy paramétert vár beolvasásra. Akkor hozza
+                csak létre az új Gangster objektumot, ha mind a négy adat beolvasása sikeres volt,
+                és ezt betesszük a gangsters vektorba. </para>
+            <para>Amikor siker volt, az nn változóhoz mindig hozzáadjuk az n változó értékét. Ez
+                majd megmutatja nekünk az összes eddig beolvasott karakter számát, ami azért kell
+                majd nekünk, hogy tudjuk, hogy hol nem olvastunk még, és innen folytassuk az
+                olvasást. Ezt a %n-el tesszük, ami nem egy paraméter. Ez fog számolni, az értéke
+                átadódik n-nek, ami szépen növeli nekünk nn-t. Amint látjuk, a data-hoz van
+                hozzáadva az nn, tehát annyit megyünk előre, amennyit eddig mát beolvastunk. </para>
+        </sect2>
+        <sect2>
+            <title>OSM térképre rajzolása</title>
+            <para>A feladat az volt, hogy debrecen térképre dobjunk rá cuccokat, ennek mintájára,
+                ahol a Tanár Úr az országba helyezte el a DEAC hekkereket:
+                https://www.twitch.tv/videos/182262537.</para>
+            <para>A feladat nálam úgy néz ki, hogy Debrecen térképén az egyetem néhány karának
+                helyszínére kis megjelölőket rakosgattan. Ezek a karok az IK, a GTK, a BTK és az
+                MK.</para>
+            <para>A feladat megoldásához a JXMapViewer könyvtárat használtam.</para>
+            <para>Először IntelliJben csináltam, de utána azt is megoldottam, hogy terminálból
+                tudjam buildelni és futtatni. </para>
+            <para>A .java és a .pom file megtalálható itt:
+                https://github.com/kovacsat2000/prog2files</para>
+            <para>A feladat megoldása nem volt túl bonyolult. A program egy maven projekt. </para>
+            <para>Először létrehozom a framet, nevet, méretet adok neki, stb., beállitom a
+                tartalmát, a mapViewer-t, ami egy JXMapViewer típusú objektum. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/7HET/OSM%20t%C3%A9rk%C3%A9pre%20rajzol%C3%A1sa/frame.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Itt négy GeoPosition típusú objektumba beleteszem az egyes karok koordinátáit, ami
+                egy szélesség és egy hosszúság(latitude, longitude).</para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/7HET/OSM%20t%C3%A9rk%C3%A9pre%20rajzol%C3%A1sa/geopos.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Ezeket mind beleteszem egy listába. A zoomToBestFit függvénnyel úgy közelítek a
+                track lista elemeire(a karok koodrinátái) a térképen, hogy mind kényelmesen
+                beleférjenek a képbe. A waypoints halmazba beteszem a térképen megjelenített
+                jelölőket. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/7HET/OSM%20t%C3%A9rk%C3%A9pre%20rajzol%C3%A1sa/lista.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Ezeket a jelölőket egy Waypointpainter objektum segítségével fogjuk kirajzolni.
+                Ezt a megjelenítőt beteszem egy painters listába. Jelenleg nem sok hasznát vesszük,
+                de ha további dolgokat jelenítenénk meg, akkor ezt a painters listát bővítenénk. A
+                painters listát egy összetett megjelenítővel rajzoljuk rá a térképre. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/7HET/OSM%20t%C3%A9rk%C3%A9pre%20rajzol%C3%A1sa/vege.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>A .pom fájllal kapcsolatban még érdemes megemlíteni a dependencyt. Ezekkel a
+                függőségekkel érem el, hogy hozzá tudjak férni a könyvtárhoz. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/7HET/OSM%20t%C3%A9rk%C3%A9pre%20rajzol%C3%A1sa/depend.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>És itt kellett a pluginokat is behúzni, amik arra szolgálnak, hogy tudjuk
+                terminálból fordítani és futtatni a progit. Meg kellett adni pl., hogy milyen javat
+                használjon, és hogy melyik legyen a mainclass.</para>
+            <para>Végül futás közben: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/7HET/OSM%20t%C3%A9rk%C3%A9pre%20rajzol%C3%A1sa/terkep.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>BrainB</title>
+            <para>Mutassuk be a Qt slot-signal mechanizmust ebben a projektben: </para>
+            <para>https://github.com/nbatfai/esport- talent-search </para>
+            <para>Az alábbi feladatban a Qt objektumokról volt szó. A Qt egy grafikai könyvtár
+                c++-hoz.</para>
+            <para>Két fontos dolog van a képben: a signalok és a slotok.</para>
+            <para>Egy Qt objektumnak van mindkettő. A signal-t azt küldi, a slot-tal pedig másik
+                objektum signal-ját fogadja. </para>
+            <para>A signal-t és a slot-ot összekötjük, ezzel megmondjuk, hogy az adott slot melyik
+                objektum melyik signal-ját várja. </para>
+            <para>Ezek a dolgok Qt specifikusak, tehát csak Qt-n belül érhetők el. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/7HET/BrainB/connectkod.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Az alábbi példában látszik, hogy a slot-okat a signal-okkal a connect fgv.-vel
+                lehet összekapcsolni. </para>
+            <para>A programban két connect található a BrainBWin.cpp fájlban. </para>
+            <para>Láthatjuk, hogy első paraméterként a küldő szerepel(brainBThread), második
+                paraméter a signal, a harmadik az az adott osztály, azaz this, a negyedik pedig a
+                slot. </para>
+            <para>Első esetben a heroesChanged signal kötődik az updateHeroes slothoz. Ha a
+                brainBThread signal-t küld a hős helyzetének megváltozásáról, akkor a slot ezt
+                fogadja, végrehajtódik az updateHeroes fgv. és megváltoztatja a hős helyzetét. </para>
+            <para>A második pedig úgy néz ki, hogy az endAndStats kötődik az endAndStats slothoz. Ha
+                érkezik a jel, akkor végrehajtódik az endAndStats, vége a játéknak(lejár a futási
+                idő), és ekkor érkezik az üzenet, hogy köszöni a játékot. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/7HET/BrainB/updateH.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/7HET/BrainB/endAS.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+    </sect1>
+    <sect1>
+        <title>8. hét</title>
+        <sect2>
+            <title>Port scan</title>
+            <para>A feladat az volt, hogy mutassunk rá ebben a port szkennelő forrásban a
+                kivételkezelés szerepére:
+                https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/ch01.html#id527287</para>
+            <para>A portscan úgy működik, hogy végigmegy a parancssorban megkapott gép TCP portjain,
+                és megpróbál kapcsolatot létrehozni. </para>
+            <para>Ha sikerül, akkor kiírja, hogy "figyeli", és be is zárjuk a socket objektumot. Ha
+                nem, akkor kiírja, hogy "nem figyeli". </para>
+            <para>A feladatban a lényeg a try-catch volt, ami a "nem figyeli" résznél "hibakezel". </para>
+            <para>A try-ban van a végrehajtani kívánt parancssorozat, itt próbálunk kapcsolatot
+                létrehozni. Ha sikerül, akkor lefut az egész try, és nincs semmi gond. Ha nem
+                sikerül, akkor lép színre a catch, és 4 féle exception jöhet létre(mármint jelen
+                esetben). </para>
+            <para>IllegalArgumentException: akkor lép fel, ha a portszám magasabb a megengedett
+                65535-től</para>
+            <para>IOException: akkor lép fel, ha nem sikerül socket objektumot létrehozni</para>
+            <para>UnknownHostException: akkor lép fel, ha az adott IP-hez nincs host
+                meghatározva</para>
+            <para>SecurityException: akkor lép fel, ha a Socket.checkConnect valamit nem akar
+                engedni. </para>
+            <para>A try-catch egy, a programozásban sokat használt dolog. Ha nem akarjuk, hogy a
+                programunk kipurcanjon valamilyen olyan résznél, aminek a lefutásában nem vagyunk
+                biztosak, akkor beletesszük egy try-catch-be, és ha esetleg nem is sikerül, akkor is
+                fut minden tovább, de megpróbáltuk út közben, amit akartunk, és még egy
+                exception-t(kivételt) is kapunk belőle. </para>
+            <para>A kód: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/8HET/Port%20scan/kod.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Futás: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/8HET/Port%20scan/term.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>Android Játék</title>
+            <para>A feladat az volt, hogy írjunk egy egyszerű Androidos „játékot”! </para>
+            <para>Ehhez a feladathoz én egy, már meglévő projekt játékát választottam. </para>
+            <para>A játékom egy Android Studio használatával írt Androidos telefonokra szánt
+                program. Gradle projektépítő használatával készült. </para>
+            <para>Egy monopolyhoz hasonlító kis appról van szó. Röviden összefoglalva annyi, hogy
+                van nekünk egy karakterünk, és egy ellenfelünk. Egy tábla az alapja mindennek, amely
+                cellákból áll. </para>
+            <para>Ezek a cellák tartalmaznak bizonyos ingatlanokat, tulajdonokat, melyeknek van egy
+                áruk és egy körönkénti profitjuk. Mindkét játékos egy alaptőkével indul, ezt lehet
+                növelni/csökkenteni. Ha az adott játékos egy mezőre lép, akkor eldöntheti, hogy
+                megveszi-e, vagy sem. Ha megveszi, akkor az ő tulajdona lesz az ingatlan, amely
+                körönként  bizonyos profitot termel. </para>
+            <para>Sorosan lépünk, tehát egyszer egyik játékos, egyszer másik. Egy lépés VAGY
+                vásárlást jelent, VAGY mozgást a cellák között. </para>
+            <para>Játékmódtól függően a játék végződhet elfogyott pénzzel, lejárt idővel, lejárt
+                lépésszámmal stb. </para>
+            <para>Így néz ki: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/8HET/Android%20j%C3%A1t%C3%A9k/1.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/8HET/Android%20j%C3%A1t%C3%A9k/2.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/8HET/Android%20j%C3%A1t%C3%A9k/3.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>A játék sok részből épül fel, mélyen nem fogok belemenni a részletekbe, de néhány
+                dolgot/érdekességet ismertetek vele kapcsolatban. </para>
+            <para>4 fregmense van: </para>
+            <para>Menu Fragment(ez a start), itt választhatunk a PLAY és az OPTIONS között</para>
+            <para>Play Fragment, itt a Game Modeok között vélogatunk</para>
+            <para>Choose Fragment, itt állíthtajuk, hogy hány játékos vesz részt a játékban</para>
+            <para>és végül a Game Fragment, ez már maga a játék. </para>
+            <para>Ez mind Frontendes dolog, a Backend lényegi része mind a GameModeFragment.xml-ben
+                található, maga a játékalgoritmika, ezekről nem írok, mert hosszú lenne, és talán
+                annyira nem is érdekes. </para>
+            <para>Ami még a fejlesztés közben érdekes volt számomra, az a navigation(.xml). </para>
+            <para>A játék futás közben itt ugrál egyik fregmensből a másikba, itt hívódnak az
+                action-ök. Sokat tanultam és tapasztaltam új dolgokat ennek fejlesztése közben. Sok
+                hibába is ütköztem, de mindet hasznosnak találom, sokmindenre megtanítottak. </para>
+            <para>Másik érdekesség, hogy ilyen Gradle projektek esetében rengeteg olyan
+                fájl(többnyire .java) van, amit látunk ám fejlesztés közben, viszont ez mindig
+                "átgenerálódik" a futás közben. Ezek is sok fejtörést okoztak, mivel ezekben lett
+                volna a legkönnyebb nyúlkálni, viszont ez nem célravezető, mivel semmi értelme az
+                "újragenerálódás" miatt. </para>
+            <para>Még egy utolsó érdekesség a projekttel kapcsolatban: a fregmensek közötti
+                paraméterek átadása. </para>
+            <para>Ezek is okoztak kisebb-nagyobb fejtöréseket, mivel nehezebb használni őket, mint
+                ahogy elsőre gondolná az ember. Kifejteni nagyon nem szeretném, de annyit róluk,
+                hogy ilyen esetben első lépésként létrehozunk egy argument-et a "destination"
+                fregmensre a navigation.xml-ben, innen majd tudja a navi, hogy itt valaminek
+                történni kell. Aztán a kezdőfregmens activityében "adnunk" kell a paramétert, és a
+                cél fregmensben pedig fogadnunk kell. Elsőre talán egyszerűnek hangzik, de korántsem
+                volt az. </para>
+        </sect2>
+        <sect2>
+            <title>JUnit teszt</title>
+            <para>A feladat az volt, hogy a
+                https://progpater.blog.hu/2011/03/05/labormeres_otthon_avagy_hogyan_dolgozok_fel_egy_pedat
+                poszt kézzel számított mélységét és szórását dolgozzuk be egy JUnit tesztbe. </para>
+            <para>Először is mi a JUnit test. A JUnit test egy olyan keretrendszer, amit
+                egységtesztelésre használnak Java nyelv mellé. </para>
+            <para>A példánk így néz ki: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/8HET/Junit%20teszt/kod.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Először is nézzük a 7. sort. Ott a @-al kezdődő sor jelöli azt a metóduskezdetet,
+                amit a tesztfuttatónak futtatnia kell. Egy teszteset kezdődik kukac annotációval,
+                aminek a törzsében lévő metódus kerül meghívásra. Itt dől el, hogy a kapott eredmény
+                azonos-e az elvárt eredménnyel. </para>
+            <para>A forciklussal végigmegyünk a karaktersoron, ami a binfa objektumba karakterenként
+                dolgozza bele(egyBitFeldolg()) az adatokat, tehát itt töltődik fel a binfa. </para>
+            <para>Aztán jön a lényeg: az assertEquals fgv.-vel vizsgáljuk meg, hogy az adott fgv.-k
+                jól működnek-e. </para>
+            <para>Ebben a háromparaméteres esetben az első paraméter jelenti azt, hogy mit várunk
+                vissza, a második paraméter az a tesztelni kívánt metódus, a harmadik pedig a
+                hibahatárt határozza meg. </para>
+            <para>A program futtatásával sokat szívtam, nem akarta találni a JUnit-os
+                importokat(mivel meg se voltak igazából), de végül egy letöltéssel és egy fordítás
+                közbeni importtal sikerült ezt is megoldani. </para>
+            <para>Lássuk: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/8HET/Junit%20teszt/term.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>AOP</title>
+            <para>A feladat az volt, hogy szőjünk bele egy átszövő vonatkozást az első védési
+                program(binfa) Java átiratába!</para>
+            <para>Ennél a feladatnál az aspektusorientáltságról van szó. </para>
+            <para>Van egy alapnyelvünk, jelen esetben ugye Java(komponensnyelv). Ehhez jön az
+                aspektusnyelv, ami megegyezhet, vagy akár el is térhet a komponensnyelvtől. Tehát a
+                komponensnyelven megírt programunkra tudunk aspektusokat alkalmazni, ami
+                megváltoztatja a programunk működését. Ez maga a szövés.</para>
+            <para>Én a következőt tettem: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/8HET/AOP/kod.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>A kis átszövés azt csinálja, hogy figyeli, hogy mikor hívódik meg az
+                egyBitFeldolg() fgv., és akkor növeli a változót, és ki is írja azt. Tehát sorban ír
+                ki számokat, és közüük az utolsó megmutatja, hogy hányszor hívódott meg az adott
+                fgv.-nk. </para>
+            <para>Futás: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/8HET/AOP/term.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>A legtöbbet talán magával a fordítással és a futtatással vesződtem(plusz a
+                telepítés és a pathok beállítása sem volt egyszerű), de végül sikerült. </para>
+        </sect2>
+    </sect1>
+    <sect1>
+        <title>9. hét</title>
+        <sect2>
+            <title>MNIST</title>
+            <para>A feladat az az alap feladat megoldása, +saját kézzel rajzolt képet is ismerjen
+                fel. </para>
+            <para>Az MNIST egy gépi tanulást modellező alkalmazás. Betanul, és képeken lévő számokat
+                ismer fel. </para>
+            <para>Ez egy tensorflow nevezetű könyvtár része, amely a gépi tanulást segíti elő. </para>
+            <para>Az mnist feladata, hogy felismerjen egy beolvasott képen lévő számot, amit a
+                readimg() fgv.-vel olvas be. </para>
+            <para>Ahhoz, hogy fel tudjon ismerni számokat, előbb be kell tanítanunk a programot. Ez
+                úgy működik, hogy a megadott modellen betanul a progi, majd egy pontosság tesztelés
+                során becsül egy elméleti pontosságot a "tudásáról". </para>
+            <para>Miután betanul, először a W_0 súlyokat ábrázolja, ez mondja meg a 0
+                valőszínűségét. Az ebből jövő ábra mutatja meg, hogy a progi milyennek gondolja a
+                0-t. </para>
+            <para>Az MNISTnél is - mint már korábban - egy neurális hálót használunk. Ennek vannak
+                rétegei, amelyek az inputból információkat szereznek. </para>
+            <para>Vátozókat tekintve: van egy x, ami egy tenzor, amibe az értékeket küldjük, ő tudja
+                azt is, hogy 28x28-as képet kell felismernie; a w egy súly, b - bias, valószínűség. </para>
+            <para>A célunk a tanítás során az, hogy minimalizáljuk az eredeti és a becsült érték
+                közötti különbséget. A programban felüti a fejét egy crossentropy nevezetű fgv., ami
+                pont ezt a különbséget mutatja meg nekünk. </para>
+            <para>Ezeket követi a tanulási fázis a GradientDescent és a SoftMax optimalizációs
+                függvény segítéségével. </para>
+            <para>Most pedig jöhet a felismerés: </para>
+            <para>Én két képet ismertetek fel vele: egy mnistes képet, ami egy 4-es, egy saját
+                kézzel írt számot, ami egy 8-as lett, és egy szintén saját 3-ast. </para>
+            <para>A gépemen a betanulás viszonylag gyorsan megy, kb olyan 6-8 mp alatt kész is,
+                eztán a megadott számokat ábrázoló képeket ismertetem fel a progival. </para>
+            <para>A progi 28x28-as képet vár, ezért a saját számaimat át kellett méretezni. </para>
+            <para>A program elindításával rengeteg sok időt szenvedtem, mivel mostanra a gépem kb.
+                egy nagy katyvasz, ráférne már egy op.rendszer újratelepítés. Az egésszel az a baj,
+                hogy mindenféle könyvtárak ömlesztve vannak feltelepítve rá, általában nem is egy,
+                hanem két-három verzió mindenből, és az ilyen dolgok miatt állandóan valamilyen
+                problémába ütközök, amik általában olyanok, hogy nem talál valamilyen könyvtárat,
+                vagy rossz elérési utvonal miatt sír. </para>
+            <para>A tensorflowt telepítettem, hogy tudjam futtatni a progit. Ezen kívül egy
+                virtuális környezetben futtatom a programot, mert sok helyen ajánlják, hogy
+                tensorflow esetén érdemes. </para>
+            <para>De kb. ilyen 6-8 óra kemény szenvedés, hiba-keresés és hiba-javítgatás után
+                feléled a program. Természetesen nagyon örültem neki. </para>
+            <para>Lássuk: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="../../../tensorf/mnist/4term.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="../../../tensorf/mnist/8term.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="../../../tensorf/mnist/3term.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="../../../tensorf/mnist/vegeterm.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+        <sect2>
+            <title>Deep MNIST</title>
+            <para>A feladat az az, mint a fenti MNIST, de a mély változattal.</para>
+            <para>A feladat nagyon hasonlított az előző feladathoz. A különbség az volt, hogy mivel
+                ez mély változat, ezért több rétegen mennek át az adatok, mélyebben tanul be a
+                program.  </para>
+            <para/>
+            <para>A kód részletek:</para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/9HET/deepmnist/readig.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Itt ugyanúgy beolvassuk a képet a mappánkból(saját kép). És itt dekódoljuk a képet
+                úgy, hogy a kimeneti color chanelje gray scale legyen. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/9HET/deepmnist/tanitas.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Ez pedig a tanitási rész. Itt elég sokáig tartott a tanítás, mivel 20000 iteráción
+                megy keresztül, és maga a modell is eléggé bonyolult. </para>
+            <para>Azért van kimentve a tanítási állapot, hogy ne kelljen minden futtatásnál kivárni
+                a legalább 20-25 percet, amíg tanul. (A példámban azért megy 1000-ig az iteráció,
+                mert mikor először futtattam 20000-ig, akkor még nem mentettem ki a tanultakat, és
+                másodszor nem volt türelmem megint kivárni a 20000-et)</para>
+            <para>A kimentés egyébként a saver.save()-el történik, a kimentettek használata pedig a
+                saver.restorre()-al. </para>
+            <para>Végül a tesztelés: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/9HET/deepmnist/teszteles.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>3 képet tesztelek, 1 alapot és 2 sajátot. Ami engem is megtévesztett, az az
+                argmax-ban az y változó. Az előzőben ez y_ volt, de a deepmnistben már sima y néven
+                szerepel, át kellett írni. </para>
+            <para>A kiértékelt y(_conv)-ból kiválasztjuk a legnagyobb értékkel rendelkező indexet,
+                ami a legpontosabb illeszkedés. </para>
+            <para>Futás: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/9HET/deepmnist/term.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Tudatja velünk minden 10. iteráció után a pillanatnyi pontosságot. Ez itt az 1000.
+                iterációig felmegy olyan 0.95-0.97 közé, de amikor először futtattam 20000-ig, akkor
+                felment 1-re. </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/9HET/deepmnist/batfaiabra.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>A modell bonyolult, és ezt a fenti ábra is szemlélteti. </para>
+            <para>Az első réteg a bemenetként átadott kép. </para>
+            <para>Az első konvulciós réteg a köv. képpen jön létre: </para>
+            <para>with tf.name_scope(’conv1’): </para>
+            <para>'   W_conv1 = weight_variable([5, 5, 1, 32]) </para>
+            <para>'    b_conv1 = bias_variable([32]) </para>
+            <para>'    h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)</para>
+            <para>A conv2d a bemenő paramétereknek számolja ki a kétdimenziós konvulcióját. </para>
+            <para>–––––––––––-–––––––-–––––––-–––––––-–––––––-</para>
+            <para>with tf.name_scope(’conv2’): </para>
+            <para>'   W_conv2 = weight_variable([5, 5, 32, 64]) </para>
+            <para>'   b_conv2 = bias_variable([64]) </para>
+            <para>'   h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2) </para>
+            <para>with tf.name_scope(’pool2’): </para>
+            <para>'   h_pool2 = max_pool_2x2(h_conv2)</para>
+            <para>–––––––––––-–––––––-–––––––-–––––––-–––––––-</para>
+            <para>with tf.name_scope(’fc1’): </para>
+            <para>'   W_fc1 = weight_variable([7 * 7 * 64, 1024]) </para>
+            <para>'   b_fc1 = bias_variable([1024]) </para>
+            <para>'   h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*64]) </para>
+            <para>'   h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)</para>
+            <para><abbrev>–––––––––––-–––––––-–––––––-–––––––-–––––––-</abbrev></para>
+            <para>with tf.name_scope(’fc2’): </para>
+            <para>W_fc2 = weight_variable([1024, 10]) </para>
+            <para>'    b_fc2 = bias_variable([10]) </para>
+            <para>'    y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2 </para>
+            <para>return y_conv, keep_prob </para>
+            <para>A max_pool maximum poolozást csinál. Ezt követi egy újabb konvulciós réteg. Ezután
+                létrejön a fullyconnected réteg. Majd bevezetünk baisokat. És 10 értékre képezzük le
+                a súlyokat és biasokat. </para>
+        </sect2>
+        <sect2>
+            <title>CIFAR-10</title>
+            <para>A feladat az az alap feladat megoldása, +saját kézzel rajzolt képet is ismerjen
+                fel. </para>
+            <para>Az ezelőtti MNIST-es példákban számokat ismertettünk fel a programmal. Most a
+                Cifar-10 esetén viszont már mást a helyzet. Ez a program szines 32x32-es képeket
+                sorol be kategóriákba(pl. repülő, kutya, macska, auto, stb.).</para>
+            <para>A progi alap forrása megtalálható a tensorflow mappájában, viszont a mi feladatunk
+                esetén jócskán bele kellett nyúlkálni a forrásokba. </para>
+            <para>Kezdjük is ott, hogy saját képet kell vele felismertetni. A program a képet
+                bináris formában olvassa, ezért a saját képünket át kell alakítani: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/9HET/cifar10m/bin.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Először is RGB-re bontjuk a bemenetet, amiket tömbben tárolunk. Aztán ezeket
+                felfűzzük listába, és bájttá alakítjuk. Kimentjuk egy .bin fájlba. </para>
+            <para>A cifar10_input.py-ba a következőt kellett módosítani: </para>
+            <para>filenames = [os.path.join(data_dir, 'input.bin')]</para>
+            <para>Ez az input.bin általunk létrehozott fájlból olvassa bemenetnek a bájtokat. </para>
+            <para>Emellett pedig át kell állítani a batch size-t 1-re, mivel 1 képet ismertetünk fel
+                vele: </para>
+            <para>tf.app.flags.DEFINE_integer(’batch_size’, 1, """Number of images to process in a
+                batch.""") </para>
+            <para>Az eredeti forrás pontosságot is mutat, de ezt kivettük, és csak a kategóriákba
+                való besorolást kérjük cifartól: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/9HET/cifar10m/fodolg.png"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Még egy fgv. hívásnál és írásnál be kellett biggyesztenünk a logits tömböt is
+                argumentumként. </para>
+        </sect2>
+        <sect2>
+            <title>Android telefonra a TF objektum detektálója</title>
+            <para>A feladat az volt, hogy telepítsük fel és próbáljuk ki! </para>
+            <para>A program tárgyakat ismert fel a telefon kamerájának segítségével. </para>
+            <para>Ezzel a feladattal viccesen az volt a baj, hogy nem tudtam min kipróbálni, mivel
+                nincs andoidos telefonom, és a családban sincs senkinek. Viszont tavaly kipróbáltam
+                a szobatársam telefonján, mikor jegyzőkönyvet csináltam, és csodával határos módon a
+                screenshotokat megtaláltam a driveomban. Akkor úgy csináltam, hogy importoltam a
+                githubról klónolt repót andr. studioba, és létrehoztam egy .apk-t belőle. Ezt
+                feltelepítettem a telefonra és már szuperált is. Íme: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/9HET/Android%20TF/47122180_2200759046852970_9189113638240124928_n.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/9HET/Android%20TF/47180270_320578008765982_1153066017371455488_n.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata
+                            fileref="hetek/9HET/Android%20TF/47211400_1132445710248006_5824279011211083776_n.png"
+                        />
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para>Nagyon érdekesnek találtam ezt a kis appot, és plusz pozitívum, hogy szívni se
+                kellett vele sokat. </para>
+            <para>(3 nappal később): </para>
+            <para>Egy barátom telefonjára ismét frissen feltelepítettem az .apk-t. Kipróbáltuk: </para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/9HET/Android%20TF/cup.jpg"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/9HET/Android%20TF/rm.jpg"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+            <para><inlinemediaobject>
+                    <imageobject>
+                        <imagedata fileref="hetek/9HET/Android%20TF/kb.jpg"/>
+                    </imageobject>
+                </inlinemediaobject></para>
+        </sect2>
+    </sect1>
+    <sect1>
+        <title>0. hét</title>
+        <sect2>
+            <title>C++ és Java</title>
+            <para>Objektumoientáltság a Javaban és a C++-ban</para>
+            <para>A Java egy teljesen objektumorientált programnyelv, ellenben a C++-al. C++-ban
+                tudunk procedurálisan is kódolni. </para>
+            <para>Az objektum egy olyan modellezés, ami a valódi világ valamilyen elemét hivatott
+                leírni/magábafoglalni. Magába foglal bizonyos taljdonságokat és viselkedéseket.
+                Tehát egyszerűen megfogalmazva a Javaban a problémákat mind objektumokkal szeretnénk
+                megoldani. </para>
+            <para>Az objektumunk ugymond tulajdonságai a változói, a viselkedései pedig a metódusai.
+                Az objektum változóit példányváltozóknak nevezzük. A metódusai függvényre
+                hasonlíanak, valamilyen feladatot végezhetnek el és értékkel térhetnek vissza. </para>
+            <para>Az osztályok arra szolgálnak, hogy hogy leíjanak egy modellt, ha úgy tetszik
+                sémát, vagy keretet, amikből majd a példányosított objektumok készülnek. Magyarán
+                megmondva leírunk egy osztályt, benne a változókkal és metódusokkal, és a keletkező
+                objektumunk, amikor azt példányosítjuk, ebből az osztályból jön létre. </para>
+            <para>Minden osztálynak van konstruktora. A konstruktor egy olyan metódus, ami az
+                osztály példányosításakor mindig lefut. Ezt az adott osztály írója megírhatja az
+                osztályon belül, de ha nem tenné, akkor a Java és a C++ is generál egy alap
+                konstruktort(tehát minden osztálynak van konstruktora, csak ha azt nem az osztály
+                leíró programozó hozza létre, akkor nem látjuk a kódban). Amikor egy osztályt
+                példányosítunk, és objektum lesz belőle, akkor automatikusan meghívódik a
+                konstruktora, ami felépíti az osztályt. Ha írtunk saját konstruktort az osztályon
+                belül, akkor ezt meg tudjuk hívni paraméterekkel ellátva is, amiket az adott
+                konstruktor fogad. </para>
+            <para>Az osztályon belül a változóink elérését(módosítását, törlését stb.) nem
+                feltétlenül kell engedélyeznünk mások számára. Az ilyen változókat nevezzük privát
+                változóknak. Mikor egy változó privát, akkor csak az adott objektum tud
+                házzáférni(amelyik az osztályból lett példányosítva). Ahhoz, hogy az ilyen
+                változókhoz hozzáférjenek más objektumok is, az adott objektum metódusait kell
+                segítségül hívniuk(getter, setter). Tehát az objektumorientált programozás egyik
+                alapjának számít az, hogy egy objektum változóihoz csak felügyelt körülmények között
+                tudjon egy másik objektum hozzáférni. </para>
+            <para>Ezen felül fontos része még az objektumorientált nyelveknek az öröklődés. Vegyünk
+                példának egy valódi villági általános dolgot: </para>
+            <para>Talán a lehető legtipikusabb a madár-pingvin példa. Létezik egy madár osztályunk
+                és egy pingvin osztályunk. A pingvin is egy madár lényegében, tehát minden
+                pingvinről elmondhatjuk, hogy madár is egyben. A madarak sok tulajdonságát és
+                viselkedését már leírtuk a madár osztályában, és amikor írjuk a pingvin osztályt,
+                akkor nem szeretnénk az ugyanolyan tulajdonságokat újra leírni. Erre van kitalálva
+                az öröklődés. Tehát mikor írjuk a pingvin osztályt, akkor nem fogjuk a sok, már
+                megírt tulajdonságot és viselkedést újra leírni, hanem egyszerűen azt mondjuk, hogy
+                a pingvin osztály kiterjeszti(extendeli) a madár osztályt. Ezzel megörököl mindent a
+                madártól. Tudunk a pingvinben még új dolgokat is hozzácsapni az osztályhoz, vagy
+                éppenséggel felülírni bizonyos tulajdonságokat és viselkedéseket, amik a pingvinnél
+                másképp kell kinézzenek, mint a madárnál. Ebben a példában lehet mondani, hogy a
+                pingvin szülője a madár. </para>
+            <para>Egy talán fontosabb különbség most kerül reflektorfénybe C++ és Java között. Mivel
+                a C++-ban van egy olyan lehetőségünk is, hogy többszörös öröklés(Javaban is létezik
+                ilyen, de csak interfacek esetén, amikről később beszélünk). Tehát a C++-ban egy
+                adott osztálynak több közvetlen szülője is lehet, több osztályt is kiterjeszthet. </para>
+            <para>Változókról beszélve három féle képpen tudjuk létrehozni őket: public, protected
+                és private módon. Ez a következőket jelenti: </para>
+            <para>Public: amikor egy változót így deklarálunk az adott osztályban, akkor ahhoz a
+                változóhoz mindenki más is hozzáférhet;</para>
+            <para>Protected: ha így van deklarálva a változó, azt azt jelenti, hogy azon osztályok
+                objektumai, amelyek kiterjesztik az adott osztályt, hozzáférhetnek a változóhoz, de
+                mások nem;</para>
+            <para>Private: amikor csak az adott osztályból létrejött objektum kap hozzáférést a
+                változóhoz.</para>
+            <para>Most beszéljünk kicsit az absztrakt osztályokról. Ezek olyan osztályok, amely nem
+                arra lettek szánva, hogy objektumok készüljenek belőlünk. Tehát egy abstract
+                osztályt nem lehet példányosítani. Az ilyen osztályokat egy másik osztály ki tudja
+                terjeszteni. Absztakt osztályokban általában a metódusokat csak létrehozzuk, de a
+                törzsüket nem dolgozzuk ki, ezt majd megteszi az őt kiterjesztő osztály. Példának
+                felhozva gondoljunk két osztályra: Állat osztály és Kutya osztály. Az Állat osztály
+                jelen példában absztrakt kell legyen, mert külön példányosítani senki nem fog olyat,
+                hogy Állat(majd a Kutyát, ami szintén ugye egy Állat). Ebben az osztályban
+                létrehozunk egy olyan metódust, amibel az Állat majd hangot ad ki, mert
+                feltételezzük, hogy minden állat ad ki hangot. Na most; a Kutya osztály kiterjeszti
+                az Állat absztrakt osztályt, ezáltal tudja magától(az Állatban megírt hangadaás
+                miatt), hogy neki hangot kell tudni adnia. De ugyanezt az absztakt osztály később
+                kiterjeszheti pld. a Macska osztály is, ami szintén kell hangot adjon, csak eltérőt
+                a Kutyától, ezért is nem írtuk meg az Állatban, hogy mit csinál a "hangadás"
+                metódus, de attól még ott van, és lehet használni. Erre jók tehát az absztrakt
+                osztályok. </para>
+            <para>Következzenek az interfacek: ez nagyon hasonlít az absztrakt osztályhoz, de van
+                egy nagy különség kettőjük között. Az interfaceben lévő metódusok CSAKIS absztraktak
+                lehetnek. Tehát az interfacen belül leírhatunk akárhány metódust, de nem lehet
+                törzsük. Ezeket a metódusokat majd az interfacet kiterjesztett osztályban fogjuk
+                felülírni(overrideolni). Itt jön képbe Java esetén a többszörös öröklés: egy adott
+                osztály interfaceből akárhányat kiterjeszthet. Érdekesség még az interfacekkel
+                kapcsolatban, hogy ha egy osztály kiterjeszt egy interfacet, akkor az osztályban az
+                interface minden metódusát felül kell írni.</para>
+            <para>A metódusok a Javaban és C++-ban is feladatokat hajtanak végre, és visszaadnak
+                értéket annak, ami meghívta őket. Az is lehetségek, hogy egy metódus értéket nem ad
+                vissza, csak végrehajt valamit. A két nyelvben a különbség abban van, hogy Javaban
+                minden egyet metódusnak is egy bizonyos osztály reszének kell lennie, míg C++-ban
+                nem. </para>
+            <para>A memóriaszemét gyűjtését a Javaban egy bizonyos, automatikus müködésű ún. garbage
+                collector végzi, ami általában jól végzi a dolgát. C++ esetében viszont nekünk kell
+                gondoskodnunk a felgyült memóriaszemétről. </para>
+            <para>Kivételkezelés tekintetében mindkét programnyelv esetében van lehetőségünk rá. Egy
+                ún. try-catchbe foglalva az adottakat. Röviden annyi az egész, hogy a try-ban van
+                az, amiben a hiba felütheti a fejét, és a catch-ben kapódik el a kivétel, ha a hiba
+                tényleg létrejön. </para>
+        </sect2>
+        <sect2>
+            <title>Python</title>
+            <para>A python egy általános célú, magas szintű programozási nyelv. Alkotója egy Guido
+                van Rossum holland programozó. 1989-ben kezdte el fejleszteni a pythont és 1991-ben
+                hozta nyilvánosságra. </para>
+            <para>A python támogatja a procedurális és objektumorientált programozást is. </para>
+            <para>Érdekesség még, hogy a python ún. interpreteres nyelv. Ez azt jelenti, hogy nincs
+                különválasztva a forrás- és tárgykód, tehát a megírt program azonnal futtatható. </para>
+            <para>Maga a nyelv könnyen megtanulható, egyszerű. Hamar lehet szép, látványos
+                eredményeket elérni vele. </para>
+            <para>Pythonban egy adott kód általában rövidebb, mint C++-ban vagy Javaban. Ennek az
+                egyszerűsége az oka. Pythonban viszonylag összetett kifejezéseket tudunk leírni
+                rövid állításokban és pl. változók definiálására sincs külön szükségünk. Sokak
+                számára még idegesítő és szokatlak ezzel a nyelvvel kapcsolatban, hogy nem
+                használunk sem zárójeleket, sem pontosvesszőket. A kód csoportosítása a sorokkal és
+                tabulátorokkal történik. Az utasítások a sorok végéig tartanak, egy programblokk
+                végét egy kisebb behúzású sor jelzi. </para>
+            <para>Kommentelni hashtaggel(azaz kettőskereszttel) tudunk. </para>
+            <para>Python esetében is létezik egy garbage collector a memóriaszemét gyűjtésére. Ezen
+                nyelv esetén a változók az objektumokra mutató referenciák. A del paranccsal
+                töröljuk egy változó hozzárendelését, és ha egy objektumra nem mutat egyetlen
+                változó sem, akkor az automatikus garbage collector törli azt. </para>
+            <para>Fentebb említettem, hogy a változókat nem kell külön deklarálni. Ez azt is
+                jelenti, hogy a típusukat sem kell leírnunk, a python kitalálja magától. Az
+                adattípusok lehetnek logikaiak(true/false), számok, szövegek(string), listák,
+                halmazok és szótárak(kulcs-érték párok). Érdekesség, hogy a számok esetén a szám
+                lehet komplex szám is. </para>
+            <para>Alapvetően a változóink mind helyi, azaz lokális változók, ha ezen változtatni
+                szeretnénk(hogy globálissá tegyük), akkor ezt a global paranccsal tudjuk megtenni. A
+                változók közötti konverzió is támogatott, tehát tudunk stringet intté tenni pl., de
+                akár intet is floattá, ha lehetségek adott körülmények között. </para>
+            <para>Kiiratni a print paranccsal tudunk. Több dolgot zárójelein belüli vesszővel
+                történő elválasztással. </para>
+            <para>Ciklusok tekintetében megtalálható a for is, illetve a while is. Bennük ugyanugy
+                létezik a break és a continue. </para>
+            <para>Labelek is vannak, amiket ha elhelyezünk valahová, akkor oda a goto paranccsal
+                tudunk ugrani. </para>
+            <para>A függvényeket a def paranccsal tudjuk definiálni. A függvények, mintha értékek
+                lennének, továbbadhatók más függvényeknek, illetve objektumkonstruktoroknak is.
+                Ugyanúgy, mint más nyelvek esetén, itt is lehetnek a függvényeknek paramétereik. A
+                legtöbb paraméter érték szerint adódik át, kivéve a mutable típusokat. A
+                függvényeknek egy visszatérési értékük van. </para>
+            <para>Objektumok tekintetében hasonlít a C++-hoz, illetve a Javahoz. Írhatunk
+                osztályokat is, amiket majd példányosíthatunk. Ezek tartalmazhatnak metódusokat,
+                amiket akár más osztályoktól is örökölhetnek. Ezeken felül az osztályoknak lehet egy
+                speciális, konstruktor tulajdonságú metódusa, az __init__. </para>
+            <para>Amiről még érdemes szót ejteni, az a kivételkezelés, ami itt is létezik. Parancsa
+                a try és except, és lehet else ág is. A tryban a kód, amit meg akarunk próbálni,
+                amelyben a kivétel előállhat. Ha hiba lép fel, akkor az except blokkra ugrik, és az
+                ebben lévő utasítások hajtódnak végre. </para>
+        </sect2>
+    </sect1>
+</article>
